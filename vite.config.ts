@@ -5,10 +5,22 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [
     remix({
+      routes(defineRoutes) {
+        return defineRoutes(async (defineRoute) => {
+          defineRoute("/", "modules/homepage/homepage.layout.tsx", () => {
+            defineRoute("", "modules/homepage/homepage.page.tsx", {
+              index: true,
+            });
+            defineRoute("about", "modules/homepage/about.page.tsx");
+          });
+        });
+      },
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
+        unstable_singleFetch: true,
+        unstable_lazyRouteDiscovery: true,
       },
     }),
     tsconfigPaths(),
