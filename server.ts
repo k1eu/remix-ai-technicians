@@ -13,6 +13,7 @@ const viteDevServer =
       );
 
 const remixHandler = createRequestHandler({
+  // @ts-expect-error notypes
   build: viteDevServer
     ? () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
     : await import("./build/server/index.js"),

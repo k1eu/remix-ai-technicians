@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  db-ai:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: aihjkl
+      POSTGRES_DB: aihjkl
+    volumes:
+      - ai-db-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+volumes:
+  ai-db-data:
+    driver: local
