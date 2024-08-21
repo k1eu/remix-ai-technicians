@@ -9,11 +9,12 @@ export default defineConfig({
         return defineRoutes(async (defineRoute) => {
           defineRoute("api/technicians", "modules/api/technicians.api.ts");
           defineRoute("/", "modules/homepage/homepage.layout.tsx", () => {
-            defineRoute("", "modules/homepage/homepage.page.tsx", {
+            defineRoute("/", "modules/homepage/homepage.page.tsx", {
               index: true,
             });
             defineRoute("about", "modules/homepage/about.page.tsx");
             defineRoute("fixit", "modules/fixit/fixit.page.tsx");
+            defineRoute("skills", "modules/fixit/skills.page.tsx");
           });
         });
       },

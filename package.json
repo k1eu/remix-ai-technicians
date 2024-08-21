@@ -16,6 +16,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@k1eu/typed-formdata": "^0.9.1",
     "@remix-run/express": "^2.11.1",
     "@remix-run/node": "^2.11.1",
     "@remix-run/react": "^2.11.1",

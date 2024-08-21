@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@k1eu/typed-formdata':
+        specifier: ^0.9.1
+        version: 0.9.1
       '@remix-run/express':
         specifier: ^2.11.1
         version: 2.11.1(express@4.19.2)(typescript@5.5.4)
@@ -875,6 +878,9 @@ packages:
 
   '@jspm/core@2.0.1':
     resolution: {integrity: sha512-Lg3PnLp0QXpxwLIAuuJboLeRaIhrgJjeuh797QADg3xz8wGLugQOS5DpsE8A6i6Adgzf+bacllkKZG3J0tGfDw==}
+
+  '@k1eu/typed-formdata@0.9.1':
+    resolution: {integrity: sha512-kb1obYdrIiHExcVqbItk76DTE3xJI3UGweH/siAKpqV+EBYRKMlEmwdeWn3krfM+SuKhVPL6TrVB61I/Gd+W8A==}
 
   '@mdx-js/mdx@2.3.0':
     resolution: {integrity: sha512-jLuwRlz8DQfQNiUCJR50Y09CGPq3fLtmtUQfVrj79E0JWu3dvsVcxVIcfhR5h0iXu+/z++zDrYeiJqifRynJkA==}
@@ -4524,6 +4530,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@jspm/core@2.0.1': {}
+
+  '@k1eu/typed-formdata@0.9.1': {}
 
   '@mdx-js/mdx@2.3.0':
     dependencies:

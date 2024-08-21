@@ -1,31 +1,34 @@
-import { sql } from "drizzle-orm";
 import { db } from "../database/db.ts";
-import { techniciansTable } from "../database/schema.ts";
 import { openAIClient } from "../llm/openai.ts";
+import { match, P } from "ts-pattern";
 
 export const getAllSkills = async () => {
-  const test = await db
-    .selectDistinct({
-      skill: sql<string>`unnest(${techniciansTable.skills})`,
-    })
-    .from(techniciansTable);
+  const test = await db.query.skillsTable.findMany();
 
-  const skills = test.map((t) => t.skill);
+  const skills = test.map((t) => t.name);
 
   return skills;
 };
 
 export async function getAllSkillsForIssue(issue: string) {
-  const skills = await getAllSkills();
-
   const resp = await openAIClient.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
-        content: `You are a helpful assistant that answers questions based on the provided context. Here is the list of skills that the technician might have: ${skills.join(
-          ", "
-        )}. You will be given a problem and you will need to find the most matching skills for the problem. If you know the answer return only the matching strings with coma as delimiter and nothing else. If you don't know the answer return "idk" and never make up an answer. If there's no matching skill, return "no skill"`,
+        content: `You are a helpful assistant that answers questions based on the provided context.
+        You will be given a problem and you will need to find the most matching skills for the problem. 
+        If you know the answer return only the matching strings with coma as delimiter and nothing else. 
+        If you don't know the answer return "idk" and never make up an answer.
+
+        Example of a problem: My car won't start
+        Example of a matching skill: Car mechanic, Car repair
+
+        Another example of a problem: Water is leaking in my kitchen
+        Another example of a matching skill: Plumbing
+
+        If there's no matching skill, return "no skill"
+        `,
       },
       {
         role: "user",
@@ -41,17 +44,26 @@ export async function getAllSkillsForIssue(issue: string) {
 
   const response = resp.choices[0].message.content;
 
-  if (!response || response === "idk") {
+  console.log({ response });
+
+  const value = match(response)
+    .with("idk", () => null)
+    .with("no skill", () => null)
+    .with(P.string, (res) => res.split(",").map((s) => s.trim()))
+    .with(null, () => null)
+    .exhaustive();
+
+  if (!value || (value && value.length < 1)) {
     return null;
   }
 
-  if (response === "no skill") {
-    return null;
-  }
+  const res = await openAIClient.embeddings.create({
+    model: "text-embedding-3-small",
+    input: value,
+  });
+  const embeddings = res.data.map((e) => e.embedding);
 
-  const aiSkills = response.split(",").map((s) => s.trim());
-
-  return aiSkills;
+  return embeddings;
 }
 
 export function parseSkillsResponse(response: string) {
